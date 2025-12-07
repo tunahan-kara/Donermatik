@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'models/unit_model.dart';
+import 'utils/default_units.dart';
 import 'screens/home_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/profile_screen.dart';
-import 'utils/default_units.dart';
+import 'screens/onboarding_screen.dart';
 
 void main() {
   runApp(const DonermatikApp());
@@ -25,10 +28,82 @@ class DonermatikApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: const MainNavigation(),
+      home: const LoadingScreen(),
+      routes: {"/main": (_) => const MainNavigation()},
     );
   }
 }
+
+//
+// 1) LOADING SCREEN → onboarding tamam mı değil mi kontrol ediyor
+//
+
+class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({super.key});
+
+  @override
+  State<LoadingScreen> createState() => _LoadingScreenState();
+}
+
+class _LoadingScreenState extends State<LoadingScreen> {
+  bool? onboardingCompleted;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboarding();
+  }
+
+  Future<void> _checkOnboarding() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool done = prefs.getBool("onboarding_completed") ?? false;
+
+    setState(() {
+      onboardingCompleted = done;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (onboardingCompleted == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    return onboardingCompleted == false
+        ? const OnboardingWrapper()
+        : const MainNavigation();
+  }
+}
+
+//
+// 2) ONBOARDING WRAPPER → onboarding ekranını çalıştırır
+//
+
+class OnboardingWrapper extends StatefulWidget {
+  const OnboardingWrapper({super.key});
+
+  @override
+  State<OnboardingWrapper> createState() => _OnboardingWrapperState();
+}
+
+class _OnboardingWrapperState extends State<OnboardingWrapper> {
+  List<UnitModel> units = List<UnitModel>.from(DefaultUnits.units);
+
+  void _applyUnitSelection(List<UnitModel> selected) {
+    setState(() {
+      units = selected;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return OnboardingScreen(units: units, onUnitsSelected: _applyUnitSelection);
+  }
+}
+
+//
+// 3) ANA NAVIGATION
+//
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -39,14 +114,34 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
-
-  // Şimdilik buradan yönetiyoruz
-  late List<UnitModel> _units;
+  List<UnitModel> _units = [];
 
   @override
   void initState() {
     super.initState();
-    _units = List<UnitModel>.from(DefaultUnits.units);
+    _loadUnits();
+  }
+
+  Future<void> _loadUnits() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? activeIds = prefs.getStringList("active_units");
+
+    // Eğer onboarding hiç çalışmamışsa → default birimleri yükle
+    if (activeIds == null) {
+      setState(() {
+        _units = List<UnitModel>.from(DefaultUnits.units);
+      });
+      return;
+    }
+
+    // Onboarding sonucu varsa → sadece aktif olanları işaretle
+    List<UnitModel> updated = DefaultUnits.units.map((unit) {
+      return unit.copyWith(isActive: activeIds.contains(unit.id));
+    }).toList();
+
+    setState(() {
+      _units = updated;
+    });
   }
 
   void _updateUnits(List<UnitModel> newUnits) {
@@ -70,11 +165,7 @@ class _MainNavigationState extends State<MainNavigation> {
         selectedItemColor: Colors.orange,
         unselectedItemColor: Colors.grey,
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: (i) => setState(() => _currentIndex = i),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.calculate),

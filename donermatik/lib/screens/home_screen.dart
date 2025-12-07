@@ -8,10 +8,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final activeUnits = units.where((u) => u.isActive).toList();
+
     return Scaffold(
       appBar: AppBar(title: const Text("Dönermatik")),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -20,19 +22,16 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
+
             Expanded(
               child: ListView.builder(
-                itemCount: units.length,
+                itemCount: activeUnits.length,
                 itemBuilder: (context, index) {
-                  final unit = units[index];
-                  if (!unit.isActive) return const SizedBox.shrink();
+                  final unit = activeUnits[index];
 
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 12,
-                    ),
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1A1A1A),
                       borderRadius: BorderRadius.circular(12),
@@ -44,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Text(
                               unit.icon,
-                              style: const TextStyle(fontSize: 24),
+                              style: const TextStyle(fontSize: 28),
                             ),
                             const SizedBox(width: 12),
                             Column(
@@ -58,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "1 ${unit.name} = ${unit.price.toStringAsFixed(2)} TL",
+                                  "1 ${unit.name} = ${unit.price.toStringAsFixed(0)} TL",
                                   style: const TextStyle(
                                     fontSize: 13,
                                     color: Colors.grey,
