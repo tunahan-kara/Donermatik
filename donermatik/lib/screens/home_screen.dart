@@ -11,12 +11,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController priceController = TextEditingController();
-  double? enteredPrice;
+  double? entered;
 
   @override
   Widget build(BuildContext context) {
-    final activeUnits = widget.units.where((u) => u.isActive).toList();
+    List<UnitModel> active = widget.units.where((u) => u.isActive).toList();
 
     return Scaffold(
       appBar: AppBar(title: const Text("Dönermatik")),
@@ -24,9 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // INPUT FIELD
             TextField(
-              controller: priceController,
               keyboardType: TextInputType.number,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
@@ -38,25 +35,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  enteredPrice = double.tryParse(value);
-                });
-              },
+              onChanged: (v) => setState(() => entered = double.tryParse(v)),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            // UNIT LIST
             Expanded(
               child: ListView.builder(
-                itemCount: activeUnits.length,
-                itemBuilder: (context, index) {
-                  final unit = activeUnits[index];
+                itemCount: active.length,
+                itemBuilder: (context, i) {
+                  final u = active[i];
 
-                  double? result = enteredPrice == null
+                  double? result = (entered == null)
                       ? null
-                      : enteredPrice! / unit.price;
+                      : entered! / u.price;
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -70,35 +62,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              unit.icon,
-                              style: const TextStyle(fontSize: 28),
-                            ),
+                            Text(u.icon, style: const TextStyle(fontSize: 26)),
                             const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  unit.name,
-                                  style: const TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  "1 ${unit.name} = ${unit.price.toStringAsFixed(0)} TL",
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              u.name,
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
-
                         Text(
-                          result == null ? "-" : "${result.toStringAsFixed(2)}",
+                          result == null ? "-" : result.toStringAsFixed(2),
                           style: const TextStyle(
                             fontSize: 20,
                             color: Colors.orange,

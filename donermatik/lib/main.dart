@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/unit_model.dart';
 import 'utils/default_units.dart';
+import 'utils/storage_service.dart';
+
 import 'screens/home_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/onboarding_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 🔥 TAM EKRAN - IMMERSIVE STICKY (KESİN ÇALIŞIR)
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Üst bar tamamen yok
+      systemNavigationBarColor: Colors.transparent, // Alt bar tamamen yok
+    ),
+  );
+
   runApp(const DonermatikApp());
 }
 
@@ -22,7 +37,6 @@ class DonermatikApp extends StatelessWidget {
       title: "Dönermatik",
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF121212),
-        primaryColor: Colors.orange,
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF1A1A1A),
           elevation: 0,
@@ -35,7 +49,7 @@ class DonermatikApp extends StatelessWidget {
 }
 
 //
-// 1) LOADING SCREEN → onboarding tamam mı değil mi kontrol ediyor
+// LOADING SCREEN — onboarding tamam mı kontrol eder
 //
 
 class LoadingScreen extends StatefulWidget {
@@ -46,37 +60,32 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  bool? onboardingCompleted;
+  bool? done;
 
   @override
   void initState() {
     super.initState();
-    _checkOnboarding();
+    _check();
   }
 
-  Future<void> _checkOnboarding() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool done = prefs.getBool("onboarding_completed") ?? false;
-
-    setState(() {
-      onboardingCompleted = done;
-    });
+  Future<void> _check() async {
+    final prefs = await SharedPreferences.getInstance();
+    done = prefs.getBool("onboarding_completed") ?? false;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    if (onboardingCompleted == null) {
+    if (done == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return onboardingCompleted == false
-        ? const OnboardingWrapper()
-        : const MainNavigation();
+    return done! ? const MainNavigation() : const OnboardingWrapper();
   }
 }
 
 //
-// 2) ONBOARDING WRAPPER → onboarding ekranını çalıştırır
+// ONBOARDING WRAPPER
 //
 
 class OnboardingWrapper extends StatefulWidget {
@@ -89,20 +98,18 @@ class OnboardingWrapper extends StatefulWidget {
 class _OnboardingWrapperState extends State<OnboardingWrapper> {
   List<UnitModel> units = List<UnitModel>.from(DefaultUnits.units);
 
-  void _applyUnitSelection(List<UnitModel> selected) {
-    setState(() {
-      units = selected;
-    });
+  void _update(List<UnitModel> newList) {
+    setState(() => units = newList);
   }
 
   @override
   Widget build(BuildContext context) {
-    return OnboardingScreen(units: units, onUnitsSelected: _applyUnitSelection);
+    return OnboardingScreen(units: units, onUnitsSelected: _update);
   }
 }
 
 //
-// 3) ANA NAVIGATION
+// ANA NAVİGASYON
 //
 
 class MainNavigation extends StatefulWidget {
@@ -113,8 +120,8 @@ class MainNavigation extends StatefulWidget {
 }
 
 class _MainNavigationState extends State<MainNavigation> {
-  int _currentIndex = 0;
-  List<UnitModel> _units = [];
+  int index = 0;
+  List<UnitModel> units = [];
 
   @override
   void initState() {
@@ -123,59 +130,71 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 
   Future<void> _loadUnits() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<UnitModel> finalUnits = [];
 
-    List<String>? activeIds = prefs.getStringList("active_units");
+    List<String>? activeIds = await StorageService.loadActiveUnits();
 
-    List<UnitModel> updated = [];
+    // Default Units
+    for (var u in DefaultUnits.units) {
+      double? savedPrice = await StorageService.loadUnitPrice(u.id);
 
-    for (var unit in DefaultUnits.units) {
-      double? savedPrice = prefs.getDouble(
-        "unit_price_${unit.id}",
-      ); // kayıtlı fiyat var mı?
-
-      updated.add(
-        unit.copyWith(
-          price: savedPrice ?? unit.price,
-          isActive: activeIds?.contains(unit.id) ?? true,
+      finalUnits.add(
+        u.copyWith(
+          price: savedPrice ?? u.price,
+          isActive: activeIds?.contains(u.id) ?? true,
         ),
       );
     }
 
-    setState(() {
-      _units = updated;
-    });
+    // Custom Units
+    List<Map<String, dynamic>> customMaps =
+        await StorageService.loadCustomUnits();
+
+    for (var m in customMaps) {
+      finalUnits.add(
+        UnitModel(
+          id: m["id"],
+          name: m["name"],
+          price: double.parse(m["price"]),
+          icon: m["icon"],
+          isActive: m["isActive"] == "true",
+        ),
+      );
+    }
+
+    setState(() => units = finalUnits);
   }
 
-  void _updateUnits(List<UnitModel> newUnits) {
-    setState(() {
-      _units = newUnits;
-    });
+  void _updateUnits(List<UnitModel> newList) {
+    setState(() => units = newList);
   }
 
   @override
   Widget build(BuildContext context) {
-    final screens = [
-      HomeScreen(units: _units),
-      SettingsScreen(units: _units, onUnitsChanged: _updateUnits),
+    final pages = [
+      HomeScreen(units: units),
+      SettingsScreen(units: units, onUnitsChanged: _updateUnits),
       const ProfileScreen(),
     ];
 
     return Scaffold(
-      body: screens[_currentIndex],
+      body: pages[index],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF1A1A1A),
+        currentIndex: index,
         selectedItemColor: Colors.orange,
         unselectedItemColor: Colors.grey,
-        currentIndex: _currentIndex,
-        onTap: (i) => setState(() => _currentIndex = i),
+        backgroundColor: const Color(0xFF1A1A1A),
+        onTap: (i) => setState(() => index = i),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.calculate),
-            label: "Hesapla",
+            label: "Calculate",
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Ayarlar"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "Settings",
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
     );

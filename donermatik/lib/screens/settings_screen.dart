@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/unit_model.dart';
 import '../utils/storage_service.dart';
+import '../utils/default_units.dart';
 
 class SettingsScreen extends StatefulWidget {
   final List<UnitModel> units;
@@ -25,81 +26,170 @@ class _SettingsScreenState extends State<SettingsScreen> {
     localUnits = List<UnitModel>.from(widget.units);
   }
 
-  // Fiyat düzenleme popup'ı
-  void _editPrice(UnitModel unit) {
-    TextEditingController controller = TextEditingController(
+  bool _isDefault(UnitModel u) => DefaultUnits.units.any((d) => d.id == u.id);
+
+  // ADD CUSTOM UNIT
+  void _openAddUnitDialog() {
+    TextEditingController nameC = TextEditingController();
+    TextEditingController priceC = TextEditingController();
+    TextEditingController iconC = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: const Text("Add Custom Unit"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _input("Unit Name", nameC),
+            _input("Price (TL)", priceC, number: true),
+            _input("Emoji/Icon", iconC),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              UnitModel newUnit = UnitModel(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: nameC.text,
+                price: double.parse(priceC.text),
+                icon: iconC.text,
+                isActive: true,
+              );
+
+              setState(() {
+                localUnits.add(newUnit);
+              });
+
+              await _saveCustomUnits();
+              widget.onUnitsChanged(localUnits);
+              Navigator.pop(context);
+            },
+            child: const Text("Add"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // REUSABLE INPUT
+  Widget _input(String label, TextEditingController c, {bool number = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: TextField(
+        controller: c,
+        keyboardType: number ? TextInputType.number : TextInputType.text,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.white60),
+        ),
+      ),
+    );
+  }
+
+  // EDIT PRICE + DELETE
+  void _editUnit(UnitModel unit) {
+    TextEditingController priceC = TextEditingController(
       text: unit.price.toString(),
     );
 
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1A1A1A),
-          title: Text("Edit ${unit.name} Price"),
-          content: TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-              labelText: "New price (TL)",
-              labelStyle: TextStyle(color: Colors.white70),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () async {
-                double newPrice =
-                    double.tryParse(controller.text) ?? unit.price;
-
-                // Fiyatı kaydet
-                await StorageService.saveUnitPrice(unit.id, newPrice);
-
-                // Local listeyi güncelle
-                setState(() {
-                  localUnits = localUnits.map((u) {
-                    if (u.id == unit.id) {
-                      return u.copyWith(price: newPrice);
-                    }
-                    return u;
-                  }).toList();
-                });
-
-                // Ana state'i güncelle
-                widget.onUnitsChanged(localUnits);
-
-                Navigator.pop(context);
-              },
-              child: const Text("Save"),
-            ),
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: Text("Edit ${unit.name}"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _input("Price (TL)", priceC, number: true),
+            if (!_isDefault(unit))
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _deleteCustom(unit);
+                },
+                child: const Text("Delete Unit"),
+              ),
           ],
-        );
-      },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              double p = double.parse(priceC.text);
+
+              await StorageService.saveUnitPrice(unit.id, p);
+
+              setState(() {
+                localUnits = localUnits.map((u) {
+                  if (u.id == unit.id) return u.copyWith(price: p);
+                  return u;
+                }).toList();
+              });
+
+              widget.onUnitsChanged(localUnits);
+              Navigator.pop(context);
+            },
+            child: const Text("Save"),
+          ),
+        ],
+      ),
     );
   }
 
-  // Toggle değişimi
-  void _toggleActive(UnitModel unit, bool newValue) async {
+  // DELETE
+  void _deleteCustom(UnitModel unit) async {
     setState(() {
-      localUnits = localUnits.map((u) {
-        if (u.id == unit.id) {
-          return u.copyWith(isActive: newValue);
-        }
-        return u;
+      localUnits.remove(unit);
+    });
+
+    await _saveCustomUnits();
+    widget.onUnitsChanged(localUnits);
+  }
+
+  // SAVE ALL CUSTOM UNITS
+  Future<void> _saveCustomUnits() async {
+    List<Map<String, dynamic>> custom = localUnits
+        .where((u) => !_isDefault(u))
+        .map(
+          (u) => {
+            "id": u.id,
+            "name": u.name,
+            "price": u.price.toString(),
+            "icon": u.icon,
+            "isActive": u.isActive.toString(),
+          },
+        )
+        .toList();
+
+    await StorageService.saveCustomUnits(custom);
+  }
+
+  // TOGGLE
+  void _toggle(UnitModel u, bool v) async {
+    setState(() {
+      localUnits = localUnits.map((x) {
+        if (x.id == u.id) return x.copyWith(isActive: v);
+        return x;
       }).toList();
     });
 
-    // aktif birimleri kaydet
-    final activeIds = localUnits
-        .where((u) => u.isActive)
-        .map((u) => u.id)
+    List<String> active = localUnits
+        .where((x) => x.isActive)
+        .map((x) => x.id)
         .toList();
-    await StorageService.saveActiveUnits(activeIds);
 
+    await StorageService.saveActiveUnits(active);
     widget.onUnitsChanged(localUnits);
   }
 
@@ -107,48 +197,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Settings")),
-      body: ListView.builder(
+      body: Padding(
         padding: const EdgeInsets.all(16),
-        itemCount: localUnits.length,
-        itemBuilder: (context, index) {
-          final unit = localUnits[index];
-
-          return Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1A1A),
-              borderRadius: BorderRadius.circular(12),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: _openAddUnitDialog,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              child: const Text("Add Custom Unit"),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // icon + name
-                Row(
-                  children: [
-                    Text(unit.icon, style: const TextStyle(fontSize: 26)),
-                    const SizedBox(width: 12),
-                    Text(unit.name, style: const TextStyle(fontSize: 17)),
-                  ],
-                ),
+            const SizedBox(height: 16),
 
-                // switch + edit button
-                Row(
-                  children: [
-                    Switch(
-                      value: unit.isActive,
-                      onChanged: (val) => _toggleActive(unit, val),
+            Expanded(
+              child: ListView.builder(
+                itemCount: localUnits.length,
+                itemBuilder: (context, index) {
+                  final u = localUnits[index];
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A1A1A),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    IconButton(
-                      onPressed: () => _editPrice(unit),
-                      icon: const Icon(Icons.edit, color: Colors.orange),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Text(u.icon, style: const TextStyle(fontSize: 26)),
+                            const SizedBox(width: 10),
+                            Text(u.name, style: const TextStyle(fontSize: 17)),
+                          ],
+                        ),
+
+                        // SWITCH + EDIT
+                        Row(
+                          children: [
+                            Switch(
+                              value: u.isActive,
+                              onChanged: (v) => _toggle(u, v),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.orange,
+                              ),
+                              onPressed: () => _editUnit(u),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  );
+                },
+              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
