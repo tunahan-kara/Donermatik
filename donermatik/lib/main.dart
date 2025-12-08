@@ -124,20 +124,23 @@ class _MainNavigationState extends State<MainNavigation> {
 
   Future<void> _loadUnits() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     List<String>? activeIds = prefs.getStringList("active_units");
 
-    // Eğer onboarding hiç çalışmamışsa → default birimleri yükle
-    if (activeIds == null) {
-      setState(() {
-        _units = List<UnitModel>.from(DefaultUnits.units);
-      });
-      return;
-    }
+    List<UnitModel> updated = [];
 
-    // Onboarding sonucu varsa → sadece aktif olanları işaretle
-    List<UnitModel> updated = DefaultUnits.units.map((unit) {
-      return unit.copyWith(isActive: activeIds.contains(unit.id));
-    }).toList();
+    for (var unit in DefaultUnits.units) {
+      double? savedPrice = prefs.getDouble(
+        "unit_price_${unit.id}",
+      ); // kayıtlı fiyat var mı?
+
+      updated.add(
+        unit.copyWith(
+          price: savedPrice ?? unit.price,
+          isActive: activeIds?.contains(unit.id) ?? true,
+        ),
+      );
+    }
 
     setState(() {
       _units = updated;
