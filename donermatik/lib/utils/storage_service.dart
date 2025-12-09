@@ -26,11 +26,9 @@ class StorageService {
   // CUSTOM UNITS SAVE
   static Future<void> saveCustomUnits(List<Map<String, dynamic>> units) async {
     final prefs = await SharedPreferences.getInstance();
-
     List<String> encoded = units
         .map((m) => m.toString())
         .toList(); // encode map → string
-
     await prefs.setStringList("custom_units", encoded);
   }
 
@@ -38,20 +36,42 @@ class StorageService {
   static Future<List<Map<String, dynamic>>> loadCustomUnits() async {
     final prefs = await SharedPreferences.getInstance();
     List<String>? saved = prefs.getStringList("custom_units");
-
     if (saved == null) return [];
 
-    return saved.map((str) {
-      str = str.substring(1, str.length - 1); // remove {}
+    return saved.map(_decodeStringToMap).toList();
+  }
 
-      final pairs = str.split(", ");
-      Map<String, dynamic> out = {};
+  // SUBSCRIPTIONS SAVE
+  static Future<void> saveSubscriptions(List<Map<String, dynamic>> subs) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> encoded = subs
+        .map((m) => m.toString())
+        .toList(); // encode map → string
+    await prefs.setStringList("subscriptions", encoded);
+  }
 
-      for (var p in pairs) {
-        var kv = p.split(": ");
+  // SUBSCRIPTIONS LOAD
+  static Future<List<Map<String, dynamic>>> loadSubscriptions() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? saved = prefs.getStringList("subscriptions");
+    if (saved == null) return [];
+
+    return saved.map(_decodeStringToMap).toList();
+  }
+
+  // HELPERS
+
+  static Map<String, dynamic> _decodeStringToMap(String str) {
+    // "{"id: 1, name: X, price: 10, icon: 😀, isActive: true}" formatını parslar
+    String trimmed = str.substring(1, str.length - 1); // remove { }
+    final pairs = trimmed.split(", ");
+    Map<String, dynamic> out = {};
+    for (var p in pairs) {
+      final kv = p.split(": ");
+      if (kv.length == 2) {
         out[kv[0]] = kv[1];
       }
-      return out;
-    }).toList();
+    }
+    return out;
   }
 }
