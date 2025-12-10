@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/unit_model.dart';
 import 'models/subscription_model.dart';
+
 import 'utils/default_units.dart';
 import 'utils/storage_service.dart';
 
@@ -13,12 +15,13 @@ import 'screens/profile_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/subscriptions_screen.dart';
 
+import 'providers/settings_provider.dart';
 import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // FULLSCREEN
+  // FULL SCREEN MODE
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   SystemChrome.setSystemUIOverlayStyle(
@@ -28,7 +31,12 @@ void main() async {
     ),
   );
 
-  runApp(const DonermatikApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => SettingsProvider()..loadSettings(),
+      child: const DonermatikApp(),
+    ),
+  );
 }
 
 class DonermatikApp extends StatelessWidget {
@@ -36,10 +44,19 @@ class DonermatikApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<SettingsProvider>().settings;
+
     return MaterialApp(
       title: 'Dönermatik',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+
+      // Provider teması
+      themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
+
+      // AppTheme fallback (lightTheme ekledik)
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+
       home: const LoadingScreen(),
     );
   }
@@ -124,7 +141,6 @@ class _MainNavigationState extends State<MainNavigation> {
     List<UnitModel> finalUnits = [];
     final activeIds = await StorageService.loadActiveUnits();
 
-    // default units
     for (var u in DefaultUnits.units) {
       final savedPrice = await StorageService.loadUnitPrice(u.id);
       finalUnits.add(
@@ -135,7 +151,6 @@ class _MainNavigationState extends State<MainNavigation> {
       );
     }
 
-    // custom units
     final customMaps = await StorageService.loadCustomUnits();
     for (var m in customMaps) {
       finalUnits.add(
