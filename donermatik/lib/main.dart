@@ -12,7 +12,6 @@ import 'utils/storage_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/profile_screen.dart';
-import 'screens/onboarding_screen.dart';
 import 'screens/subscriptions_screen.dart';
 
 import 'providers/settings_provider.dart';
@@ -90,26 +89,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     return done! ? const MainNavigation() : const OnboardingWelcomeScreen();
-  }
-}
-
-class OnboardingWrapper extends StatefulWidget {
-  const OnboardingWrapper({super.key});
-
-  @override
-  State<OnboardingWrapper> createState() => _OnboardingWrapperState();
-}
-
-class _OnboardingWrapperState extends State<OnboardingWrapper> {
-  List<UnitModel> units = List<UnitModel>.from(DefaultUnits.units);
-
-  void _updateUnits(List<UnitModel> updated) {
-    setState(() => units = updated);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return OnboardingScreen(units: units, onUnitsSelected: _updateUnits);
   }
 }
 
