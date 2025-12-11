@@ -18,6 +18,8 @@ import 'screens/subscriptions_screen.dart';
 import 'providers/settings_provider.dart';
 import 'theme/app_theme.dart';
 
+import 'screens/onboarding_welcome.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -49,15 +51,12 @@ class DonermatikApp extends StatelessWidget {
     return MaterialApp(
       title: 'Dönermatik',
       debugShowCheckedModeBanner: false,
-
-      // Provider teması
       themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
-
-      // AppTheme fallback (lightTheme ekledik)
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-
       home: const LoadingScreen(),
+
+      routes: {"/main": (context) => const MainNavigation()},
     );
   }
 }
@@ -90,7 +89,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return done! ? const MainNavigation() : const OnboardingWrapper();
+    return done! ? const MainNavigation() : const OnboardingWelcomeScreen();
   }
 }
 
@@ -191,32 +190,75 @@ class _MainNavigationState extends State<MainNavigation> {
         units: units,
       ),
       SettingsScreen(units: units, onUnitsChanged: _updateUnits),
-      const ProfileScreen(),
+      ProfileScreen(
+        activeUnitCount: units.where((u) => u.isActive).length,
+        subscriptionCount: subs.length,
+      ),
     ];
 
     return Scaffold(
       body: pages[index],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,
-        onTap: (i) => setState(() => index = i),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calculate_outlined),
-            label: 'Hesapla',
+
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          // 🔥 Ripple / parlama fabrikasını tamamen kapat
+          splashFactory: NoSplash.splashFactory,
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.cardDark
+              : AppColors.cardLight,
+
+          currentIndex: index,
+          onTap: (i) => setState(() => index = i),
+
+          enableFeedback: false,
+          showUnselectedLabels: true,
+
+          // ✔ Smooth seçili efekt
+          selectedIconTheme: const IconThemeData(
+            size: 30,
+            color: AppColors.accent,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.autorenew),
-            label: 'Abonelikler',
+          unselectedIconTheme: const IconThemeData(
+            size: 24,
+            color: Colors.grey,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            label: 'Ayarlar',
+
+          selectedLabelStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: AppColors.accent,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profil',
+          unselectedLabelStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: Colors.grey,
           ),
-        ],
+
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calculate_outlined),
+              label: 'Hesapla',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.autorenew),
+              label: 'Abonelikler',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings_outlined),
+              label: 'Ayarlar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: 'Profil',
+            ),
+          ],
+        ),
       ),
     );
   }

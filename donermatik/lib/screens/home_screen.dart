@@ -19,7 +19,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final activeUnits = widget.units.where((u) => u.isActive).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Dönermatik')),
+      appBar: AppBar(
+        title: const Text("Dönermatik"),
+        centerTitle: true,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

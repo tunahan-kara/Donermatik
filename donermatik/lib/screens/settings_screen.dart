@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/unit_model.dart';
 import '../utils/storage_service.dart';
 import '../utils/default_units.dart';
+import '../theme/app_theme.dart';
 
 class SettingsScreen extends StatefulWidget {
   final List<UnitModel> units;
@@ -28,7 +29,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   bool _isDefault(UnitModel u) => DefaultUnits.units.any((d) => d.id == u.id);
 
-  // ADD CUSTOM UNIT
+  // ----------------------------------------------------------
+  //  INPUT WIDGET (PREMIUM)
+  // ----------------------------------------------------------
+  Widget _input(String label, TextEditingController c, {bool number = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: TextField(
+        controller: c,
+        keyboardType: number ? TextInputType.number : TextInputType.text,
+        style: const TextStyle(color: AppColors.textPrimary),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: AppColors.textSecondary),
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white24),
+          ),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: AppColors.accent),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ----------------------------------------------------------
+  //   YENİ BİRİM EKLEME DİYALOĞU (TÜRKÇE + PREMIUM)
+  // ----------------------------------------------------------
   void _openAddUnitDialog() {
     TextEditingController nameC = TextEditingController();
     TextEditingController priceC = TextEditingController();
@@ -37,23 +64,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A1A),
-        title: const Text("Add Custom Unit"),
+        backgroundColor: AppColors.cardDark,
+        title: const Text(
+          "Yeni Birim Ekle",
+          style: TextStyle(color: Colors.white),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _input("Unit Name", nameC),
-            _input("Price (TL)", priceC, number: true),
-            _input("Emoji/Icon", iconC),
+            _input("Birim Adı", nameC),
+            _input("Fiyat (TL)", priceC, number: true),
+            _input("Emoji / İkon", iconC),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: const Text("İptal", style: TextStyle(color: Colors.white70)),
           ),
           TextButton(
             onPressed: () async {
+              if (nameC.text.trim().isEmpty ||
+                  priceC.text.trim().isEmpty ||
+                  iconC.text.trim().isEmpty) {
+                Navigator.pop(context);
+                return;
+              }
+
               UnitModel newUnit = UnitModel(
                 id: DateTime.now().millisecondsSinceEpoch.toString(),
                 name: nameC.text,
@@ -62,52 +99,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 isActive: true,
               );
 
-              setState(() {
-                localUnits.add(newUnit);
-              });
+              setState(() => localUnits.add(newUnit));
 
               await _saveCustomUnits();
               widget.onUnitsChanged(localUnits);
               Navigator.pop(context);
             },
-            child: const Text("Add"),
+            child: const Text(
+              "Ekle",
+              style: TextStyle(color: AppColors.accent),
+            ),
           ),
         ],
       ),
     );
   }
 
-  // REUSABLE INPUT
-  Widget _input(String label, TextEditingController c, {bool number = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: TextField(
-        controller: c,
-        keyboardType: number ? TextInputType.number : TextInputType.text,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: const TextStyle(color: Colors.white60),
-        ),
-      ),
-    );
-  }
-
-  // EDIT PRICE + DELETE
+  // ----------------------------------------------------------
+  //  BİRİM DÜZENLEME (SİLME + PREMIUM)
+  // ----------------------------------------------------------
+  // ----------------------------------------------------------
+  //  BİRİM DÜZENLEME (İSİM + FİYAT + EMOJI + SİLME)
+  // ----------------------------------------------------------
   void _editUnit(UnitModel unit) {
+    TextEditingController nameC = TextEditingController(text: unit.name);
     TextEditingController priceC = TextEditingController(
       text: unit.price.toString(),
     );
+    TextEditingController iconC = TextEditingController(text: unit.icon);
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A1A),
-        title: Text("Edit ${unit.name}"),
+        backgroundColor: AppColors.cardDark,
+        title: Text(
+          "${unit.name} Düzenle",
+          style: const TextStyle(color: Colors.white),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _input("Price (TL)", priceC, number: true),
+            _input("Birim Adı", nameC),
+            _input("Fiyat (TL)", priceC, number: true),
+            _input("Emoji / İkon", iconC),
+
+            const SizedBox(height: 14),
+
             if (!_isDefault(unit))
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -115,49 +152,72 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pop(context);
                   _deleteCustom(unit);
                 },
-                child: const Text("Delete Unit"),
+                child: const Text("Birim Sil"),
               ),
           ],
         ),
         actions: [
           TextButton(
+            child: const Text("İptal", style: TextStyle(color: Colors.white60)),
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
           ),
           TextButton(
+            child: const Text(
+              "Kaydet",
+              style: TextStyle(color: AppColors.accent),
+            ),
             onPressed: () async {
-              double p = double.parse(priceC.text);
+              final newName = nameC.text.trim();
+              final newPrice = double.tryParse(priceC.text) ?? unit.price;
+              final newIcon = iconC.text.trim().isEmpty
+                  ? unit.icon
+                  : iconC.text.trim();
 
-              await StorageService.saveUnitPrice(unit.id, p);
+              if (newName.isEmpty) {
+                Navigator.pop(context);
+                return;
+              }
 
+              // Fiyatı kaydet
+              await StorageService.saveUnitPrice(unit.id, newPrice);
+
+              // Yerel listeyi güncelle
               setState(() {
                 localUnits = localUnits.map((u) {
-                  if (u.id == unit.id) return u.copyWith(price: p);
+                  if (u.id == unit.id) {
+                    return u.copyWith(
+                      name: newName,
+                      price: newPrice,
+                      icon: newIcon,
+                    );
+                  }
                   return u;
                 }).toList();
               });
 
+              await _saveCustomUnits();
               widget.onUnitsChanged(localUnits);
+
               Navigator.pop(context);
             },
-            child: const Text("Save"),
           ),
         ],
       ),
     );
   }
 
-  // DELETE
+  // ----------------------------------------------------------
+  //   SİLME
+  // ----------------------------------------------------------
   void _deleteCustom(UnitModel unit) async {
-    setState(() {
-      localUnits.remove(unit);
-    });
-
+    setState(() => localUnits.remove(unit));
     await _saveCustomUnits();
     widget.onUnitsChanged(localUnits);
   }
 
-  // SAVE ALL CUSTOM UNITS
+  // ----------------------------------------------------------
+  //   TÜM CUSTOM BİRİMLERİ KAYDET
+  // ----------------------------------------------------------
   Future<void> _saveCustomUnits() async {
     List<Map<String, dynamic>> custom = localUnits
         .where((u) => !_isDefault(u))
@@ -175,7 +235,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await StorageService.saveCustomUnits(custom);
   }
 
-  // TOGGLE
+  // ----------------------------------------------------------
+  //   AKTİF/PASİF (TOGGLE)
+  // ----------------------------------------------------------
   void _toggle(UnitModel u, bool v) async {
     setState(() {
       localUnits = localUnits.map((x) {
@@ -193,21 +255,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
     widget.onUnitsChanged(localUnits);
   }
 
+  // ----------------------------------------------------------
+  //   BUILD
+  // ----------------------------------------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Settings")),
+      appBar: AppBar(
+        title: const Text("Birim Ayarları"),
+        centerTitle: true,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+      ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            ElevatedButton(
-              onPressed: _openAddUnitDialog,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              child: const Text("Add Custom Unit"),
+            // -------------------------------
+            //   YENİ BİRİM EKLEME BUTONU
+            // -------------------------------
+            Container(
+              width: double.infinity,
+              decoration: AppTheme.cardDecoration(),
+              padding: const EdgeInsets.all(14),
+              child: ElevatedButton(
+                onPressed: _openAddUnitDialog,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: Colors.black,
+                ),
+                child: const Text("Yeni Birim Ekle"),
+              ),
             ),
+
             const SizedBox(height: 16),
 
+            // -------------------------------
+            //   BİRİM LİSTESİ
+            // -------------------------------
             Expanded(
               child: ListView.builder(
                 itemCount: localUnits.length,
@@ -216,23 +302,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 12),
+                    decoration: AppTheme.cardDecoration(),
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1A1A1A),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            Text(u.icon, style: const TextStyle(fontSize: 26)),
-                            const SizedBox(width: 10),
-                            Text(u.name, style: const TextStyle(fontSize: 17)),
+                            Text(u.icon, style: const TextStyle(fontSize: 28)),
+                            const SizedBox(width: 12),
+                            Text(
+                              u.name,
+                              style: const TextStyle(
+                                fontSize: 17,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
                           ],
                         ),
 
-                        // SWITCH + EDIT
                         Row(
                           children: [
                             Switch(
@@ -242,7 +330,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             IconButton(
                               icon: const Icon(
                                 Icons.edit,
-                                color: Colors.orange,
+                                color: AppColors.accent,
                               ),
                               onPressed: () => _editUnit(u),
                             ),
