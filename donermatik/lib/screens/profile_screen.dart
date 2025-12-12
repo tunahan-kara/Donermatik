@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   final int activeUnitCount;
@@ -23,6 +24,36 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   // Avatar seçenekleri
   final List<String> avatars = ["😎", "🥸", "🤠", "🤓", "🐸", "🦊", "🐵"];
+
+  // ----------------------------------------------------------
+  // PROFİL BİLGİLERİNİ YÜKLE (KALICI OLAN)
+  // ----------------------------------------------------------
+  Future<void> loadProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString("profile_name") ?? "Kullanıcı";
+      avatar = prefs.getString("profile_avatar") ?? "😎";
+    });
+  }
+
+  // ----------------------------------------------------------
+  // PROFİLİ KAYDET
+  // ----------------------------------------------------------
+  Future<void> saveName(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("profile_name", name);
+  }
+
+  Future<void> saveAvatar(String a) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("profile_avatar", a);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfile(); // <-- PROFİLİ UYGULAMA AÇILIRKEN YÜKLE
+  }
 
   // ----------------------------------------------------------
   // İSİM DEĞİŞTİRME DİYALOĞU
@@ -59,6 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             onPressed: () {
               if (nameC.text.trim().isNotEmpty) {
                 setState(() => userName = nameC.text.trim());
+                saveName(userName); // <-- BURADA KAYDEDİYORUZ
               }
               Navigator.pop(context);
             },
@@ -100,6 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 return GestureDetector(
                   onTap: () {
                     setState(() => avatar = a);
+                    saveAvatar(a); // <-- BURADA KAYDEDİYORUZ
                     Navigator.pop(context);
                   },
                   child: Container(
