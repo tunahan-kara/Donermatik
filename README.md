@@ -14,12 +14,7 @@ Eğlenceli bir deneyim sunar
 Finans takibini sıkıcı olmaktan çıkarır
 Bu proje, “küçük ama akılda kalıcı fikirlerin” güçlü bir ürün deneyimine nasıl dönüştürülebileceğini göstermek amacıyla geliştirilmiştir.
 
-📱 Uygulama Ekranları
-
-![onboarding](https://github.com/user-attachments/assets/7eab3ca8-0aaa-4778-935a-cc83508b3c1e)
 ![home](https://github.com/user-attachments/assets/ec0b1f87-a098-42fc-8594-5743fcbaf543)
-![subs](https://github.com/user-attachments/assets/96260284-7527-4b4f-95be-44a26755379f)
-![settings](https://github.com/user-attachments/assets/6da26f84-0a1c-4577-b0d6-ec6caa93644e)
 ![profile](https://github.com/user-attachments/assets/03958133-fb42-412f-85c5-57914b82c958)
 
 ✨ Öne Çıkan Özellikler
@@ -91,13 +86,9 @@ Increase spending awareness
 Make financial tracking enjoyable
 Demonstrate how a simple idea can turn into a real product
 
-📱 Screenshots
-
-![onboarding](https://github.com/user-attachments/assets/7eab3ca8-0aaa-4778-935a-cc83508b3c1e)
 ![home](https://github.com/user-attachments/assets/ec0b1f87-a098-42fc-8594-5743fcbaf543)
-![subs](https://github.com/user-attachments/assets/96260284-7527-4b4f-95be-44a26755379f)
-![settings](https://github.com/user-attachments/assets/6da26f84-0a1c-4577-b0d6-ec6caa93644e)
 ![profile](https://github.com/user-attachments/assets/03958133-fb42-412f-85c5-57914b82c958)
+
 
 ✨ Key Features
 
