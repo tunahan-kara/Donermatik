@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import '../theme/app_theme.dart';
 
 class ProfileScreen extends StatefulWidget {
   final int activeUnitCount;
@@ -16,8 +15,9 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  // Varsayılan avatar ve isim
+class _ProfileScreenState extends State<ProfileScreen>
+    with SingleTickerProviderStateMixin {
+  // Varsayılan profil bilgileri
   String avatar = "😎";
   String userName = "Kullanıcı";
 
@@ -35,14 +35,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (_) => AlertDialog(
         backgroundColor: AppColors.cardDark,
         title: const Text(
-          "İsmini Değiştir",
+          "İsmi Değiştir",
           style: TextStyle(color: Colors.white),
         ),
         content: TextField(
           controller: nameC,
           style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(
-            labelText: "Yeni İsim",
+            labelText: "Yeni isim",
             labelStyle: TextStyle(color: Colors.white60),
           ),
         ),
@@ -69,14 +69,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // ----------------------------------------------------------
-  // AVATAR SEÇME SHEET
+  // AVATAR SEÇME MODAL BOTTOM SHEET
   // ----------------------------------------------------------
   void _chooseAvatar() {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.cardDark,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
       ),
       builder: (_) => Padding(
         padding: const EdgeInsets.all(16),
@@ -87,15 +87,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               "Avatar Seç",
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
 
             Wrap(
-              spacing: 16,
-              runSpacing: 16,
+              spacing: 18,
+              runSpacing: 18,
               children: avatars.map((a) {
                 return GestureDetector(
                   onTap: () {
@@ -103,24 +103,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.pop(context);
                   },
                   child: Container(
-                    width: 64,
-                    height: 64,
+                    width: 62,
+                    height: 62,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white12,
+                      color: Colors.white10,
                       border: Border.all(
                         color: a == avatar ? AppColors.accent : Colors.white24,
                         width: 2,
                       ),
                     ),
                     alignment: Alignment.center,
-                    child: Text(a, style: const TextStyle(fontSize: 32)),
+                    child: Text(a, style: const TextStyle(fontSize: 30)),
                   ),
                 );
               }).toList(),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
           ],
         ),
       ),
@@ -133,7 +133,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Profil"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Profil"),
+        centerTitle: true,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+      ),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -141,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // -------------------------------------------------------
-            //  PROFIL KARTI
+            // PROFIL KARTI
             // -------------------------------------------------------
             Container(
               width: double.infinity,
@@ -149,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // Avatar bubble
+                  // Avatar
                   GestureDetector(
                     onTap: _chooseAvatar,
                     child: Container(
@@ -170,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const SizedBox(width: 16),
 
-                  // Name + Edit Button
+                  // Name + edit
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -183,7 +188,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 4),
-
                       GestureDetector(
                         onTap: _changeName,
                         child: const Text(
@@ -203,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 20),
 
             // -------------------------------------------------------
-            //  HIZLI İSTATİSTİK KARTLARI
+            // ÖZET KARTLARI
             // -------------------------------------------------------
             const Text(
               "Özet",
@@ -213,6 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: AppColors.textPrimary,
               ),
             ),
+
             const SizedBox(height: 12),
 
             Row(
@@ -225,16 +230,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const Icon(
                           Icons.calculate_outlined,
-                          size: 32,
+                          size: 30,
                           color: AppColors.accent,
                         ),
                         const SizedBox(height: 6),
                         const Text(
                           "Aktif Birimler",
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 14,
-                          ),
+                          style: TextStyle(color: AppColors.textSecondary),
                         ),
                         Text(
                           widget.activeUnitCount.toString(),
@@ -257,16 +259,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const Icon(
                           Icons.autorenew,
-                          size: 32,
+                          size: 30,
                           color: AppColors.accent,
                         ),
                         const SizedBox(height: 6),
                         const Text(
                           "Abonelik Sayısı",
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 14,
-                          ),
+                          style: TextStyle(color: AppColors.textSecondary),
                         ),
                         Text(
                           widget.subscriptionCount.toString(),
@@ -286,11 +285,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 20),
 
             // -------------------------------------------------------
-            //  YAKINDA ÖZELLİKLER
+            // YAKINDA GELECEK ÖZELLİKLER
             // -------------------------------------------------------
             Container(
-              decoration: AppTheme.cardDecoration(),
               width: double.infinity,
+              decoration: AppTheme.cardDecoration(),
               padding: const EdgeInsets.all(16),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,7 +302,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 10),
+                  Text(
+                    "• Finans takibi 📊",
+                    style: TextStyle(color: AppColors.textSecondary),
+                  ),
+                  Text(
+                    "• Aylık / yıllık harcama analizleri 📈",
+                    style: TextStyle(color: AppColors.textSecondary),
+                  ),
                   Text(
                     "• Rozetler ve başarı sistemi 🏅",
                     style: TextStyle(color: AppColors.textSecondary),
@@ -312,13 +319,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     "• Profil kişiselleştirme seçenekleri ✨",
                     style: TextStyle(color: AppColors.textSecondary),
                   ),
-                  Text(
-                    "• Aylık / yıllık harcama analizleri 📊",
-                    style: TextStyle(color: AppColors.textSecondary),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // -------------------------------------------------------
+            // ORCA İLETİŞİM KARTI
+            // -------------------------------------------------------
+            Container(
+              width: double.infinity,
+              decoration: AppTheme.cardDecoration(),
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  // Logo bubble
+                  Container(
+                    width: 42,
+                    height: 42,
+                    child: Image.asset(
+                      "assets/orca_logo.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+
+                  const SizedBox(width: 14),
+
+                  // Texts
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "İstek & Şikayet / İletişim",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          "orcadev2025@gmail.com",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.accent,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
+
+            const SizedBox(height: 40),
           ],
         ),
       ),

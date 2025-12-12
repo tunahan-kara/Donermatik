@@ -75,7 +75,7 @@ class _OnboardingWelcomeScreenState extends State<OnboardingWelcomeScreen>
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    "Harcamalarını döner cinsinden ölç, eğlenirken tasarruf et. "
+                    "Harcamalarını istediğin birim cinsinden ölç, eğlenirken tasarruf et. "
                     "Dönermatik artık yanında!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -101,7 +101,7 @@ class _OnboardingWelcomeScreenState extends State<OnboardingWelcomeScreen>
                   ),
                   onPressed: completeOnboarding,
                   child: const Text(
-                    "Başlayalım 🚀",
+                    "Hadi Başlayalım 🚀",
                     style: TextStyle(fontSize: 17),
                   ),
                 ),

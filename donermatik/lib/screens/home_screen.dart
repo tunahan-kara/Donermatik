@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          "Seçriğin birimlerden kaç adet alabileceğini öğren!",
+                          "Seçtiğin birimlerden kaç adet alabileceğini öğren!",
                           style: TextStyle(
                             fontSize: 13,
                             color: AppColors.textSecondary,
