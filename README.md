@@ -70,6 +70,15 @@ MVP mantığıyla ölçeklenebilir yapı
 Geri bildirim, öneri veya hata bildirimi için:
 📧 orcadev2025@gmail.com
 
+⚠️ Lisans ve Kullanım
+Bu proje, eğitim ve kişisel kullanım için açık kaynaklıdır.
+
+Ticari amaçlı yeniden dağıtım, uygulama konseptinin uygulama mağazalarında yayınlanmak üzere kopyalanması,
+veya küçük değişikliklerle yeniden yüklenmesi izinsiz olarak yasaktır.
+
+© 2025 Tunahan Kara
+
+
 
 [ENG]
 
@@ -115,3 +124,12 @@ Clean MVP-oriented architecture
 📬 Contact
 For feedback or suggestions:
 📧 orcadev2025@gmail.com
+
+
+⚠️ License & Usage
+This project is open-source for educational and personal use.
+
+Commercial redistribution, cloning the app concept for publishing on app stores,
+or re-uploading with minor modifications is not permitted without permission.
+
+© 2025 Tunahan Kara
