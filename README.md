@@ -14,8 +14,9 @@ Eğlenceli bir deneyim sunar
 Finans takibini sıkıcı olmaktan çıkarır
 Bu proje, “küçük ama akılda kalıcı fikirlerin” güçlü bir ürün deneyimine nasıl dönüştürülebileceğini göstermek amacıyla geliştirilmiştir.
 
-![home](https://github.com/user-attachments/assets/ec0b1f87-a098-42fc-8594-5743fcbaf543)
-![profile](https://github.com/user-attachments/assets/03958133-fb42-412f-85c5-57914b82c958)
+
+Ekran Görüntüleri için :
+![Ekran Görüntüleri](https://github.com/tunahan-kara/Donermatik/tree/main/screenshots)
 
 ✨ Öne Çıkan Özellikler
 🚀 Onboarding
@@ -86,8 +87,9 @@ Increase spending awareness
 Make financial tracking enjoyable
 Demonstrate how a simple idea can turn into a real product
 
-![home](https://github.com/user-attachments/assets/ec0b1f87-a098-42fc-8594-5743fcbaf543)
-![profile](https://github.com/user-attachments/assets/03958133-fb42-412f-85c5-57914b82c958)
+For Screenshots : 
+![Screenshots](https://github.com/tunahan-kara/Donermatik/tree/main/screenshots)
+
 
 
 ✨ Key Features
