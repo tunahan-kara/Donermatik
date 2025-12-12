@@ -1,3 +1,5 @@
+[TR]
+
 🥙 Dönermatik
 
 Dönermatik, günlük harcamaları klasik para birimleri yerine eğlenceli ve anlamlı birimler (ör. döner, kahve vb.) cinsinden görmeyi sağlayan modern bir mobil uygulamadır.
