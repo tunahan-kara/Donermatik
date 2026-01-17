@@ -17,8 +17,7 @@ Finans takibini sıkıcı olmaktan çıkarır
 Bu proje, “küçük ama akılda kalıcı fikirlerin” güçlü bir ürün deneyimine nasıl dönüştürülebileceğini göstermek amacıyla geliştirilmiştir.
 
 
-Ekran Görüntüleri için :
-![Ekran Görüntüleri](https://github.com/tunahan-kara/Donermatik/tree/main/screenshots)
+Ekran Görüntüleri için: [Ekran Görüntüleri](https://github.com/tunahan-kara/Donermatik/tree/main/screenshots)
 
 ✨ Öne Çıkan Özellikler
 🚀 Onboarding
