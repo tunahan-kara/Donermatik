@@ -97,8 +97,7 @@ Increase spending awareness
 Make financial tracking enjoyable
 Demonstrate how a simple idea can turn into a real product
 
-For Screenshots : 
-![Screenshots](https://github.com/tunahan-kara/Donermatik/tree/main/screenshots)
+For Screenshots : [Ekran Görüntüleri](https://github.com/tunahan-kara/Donermatik/tree/main/screenshots)
 
 
 
