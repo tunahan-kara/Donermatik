@@ -1,7 +1,5 @@
 [TR]
 
-[![Google Play](https://img.shields.io/badge/Google_Play-Dönermatik-green?logo=google-play)](LINK)
-
 # 🥙 Dönermatik
 
 > “Bu aslında kaç döner ediyor?” 🌯
@@ -19,6 +17,8 @@ Proje; Flutter ile geliştirilmiş tam fonksiyonel bir MVP (Minimum Viable Produ
 # 🚀 Google Play’de Yayında
 
 📲 Dönermatik’i indir: [Google Play Store](https://play.google.com/store/apps/details?id=com.orcadev.donermatik)
+[![Google Play](https://img.shields.io/badge/Google_Play-Dönermatik-green?logo=google-play)]([LINK](https://play.google.com/store/apps/details?id=com.orcadev.donermatik))
+
 
 ---
 
