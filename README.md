@@ -1,133 +1,245 @@
 [TR]
 
-🥙 Dönermatik
+# 🥙 Dönermatik
 
-Dönermatik, günlük harcamaları klasik para birimleri yerine eğlenceli ve anlamlı birimler (ör. döner, kahve vb.) cinsinden görmeyi sağlayan modern bir mobil uygulamadır.
-“Bu ay kaç TL harcadım?” yerine
-👉 “Bu ay 47 döner harcamışım.” demeni sağlar.
+> “Bu aslında kaç döner ediyor?” 🌯
 
-Uygulama, Flutter ile geliştirilmiş tam fonksiyonel bir MVP (Minimum Viable Product) olup; onboarding, kalıcı kullanıcı verisi, premium UI ve branding gibi gerçek ürün bileşenlerini içerir.
+Dönermatik, günlük harcamaları döner, kahve, çay, simit ve kullanıcı tarafından oluşturulabilen özel birimler gibi eğlenceli ve günlük hayattan alınmış ölçülere dönüştüren modern bir mobil uygulamadır.
 
-🎯 Neden Dönermatik?
-Para harcamak soyut bir kavramdır.
-Dönermatik, harcamaları günlük hayatta herkesin zihninde canlandırabileceği birimlere çevirerek:
-Harcama farkındalığını artırır
-Eğlenceli bir deneyim sunar
-Finans takibini sıkıcı olmaktan çıkarır
-Bu proje, “küçük ama akılda kalıcı fikirlerin” güçlü bir ürün deneyimine nasıl dönüştürülebileceğini göstermek amacıyla geliştirilmiştir.
+Klasik finans uygulamalarındaki:
+> “Bu ay ne kadar harcadım?” sorusunu daha eğlenceli bir hale getirerek kullanıcıya:
+> “Bu ay 47 döner harcamışım.” dedirtmeyi amaçlar.
 
+Proje; Flutter ile geliştirilmiş tam fonksiyonel bir MVP (Minimum Viable Product) olup onboarding, kalıcı veri yönetimi, modern UI/UX, branding ve gerçek ürün deneyimi bileşenlerini içermektedir.
 
-Ekran Görüntüleri için: [Ekran Görüntüleri](https://github.com/tunahan-kara/Donermatik/tree/main/screenshots)
+---
 
-✨ Öne Çıkan Özellikler
-🚀 Onboarding
-Uygulama ilk açıldığında animasyonlu karşılama ekranı
-Tek seferlik gösterim (sonraki açılışlarda tekrar gösterilmez)
+# 🚀 Google Play’de Yayında
 
-🧮 Harcama Hesaplama
-Harcamaları farklı birimler cinsinden hesaplama
-Kullanıcıya anlamlı ve eğlenceli geri bildirim
+📲 Dönermatik’i indir: [Google Play Store](https://play.google.com/store/apps/details?id=com.orcadev.donermatik)
 
-🔄 Abonelik Yönetimi
-Aylık abonelik ekleme / düzenleme / silme
-Toplam aylık harcamanın otomatik hesaplanması
-Harcamaların aktif birimlere göre karşılıklarının gösterilmesi
+---
 
-⚙️ Birim Yönetimi
-Varsayılan birimler + özel birim ekleme
-Birim fiyatı düzenleme
-Birimleri aktif / pasif yapabilme
+# 🎯 Neden Dönermatik?
 
-👤 Profil
+Para soyut bir kavramdır. Dönermatik, harcamaları insanların zihninde daha kolay canlandırabileceği günlük birimlere dönüştürerek finansal farkındalığı daha anlaşılır ve eğlenceli hale getirmeyi hedefler.
 
-Kullanıcı adı değiştirme
-Uygulama içi avatar seçimi
-Profil bilgilerinin kalıcı olarak saklanması
+Uygulamanın amacı:
 
-💾 Kalıcı Veri
+* Harcama farkındalığını artırmak
+* Finans takibini daha eğlenceli hale getirmek
+* Basit ama yaratıcı bir fikrin gerçek bir ürüne dönüşebileceğini göstermek
+* Modern ve akılda kalıcı bir mobil deneyim sunmaktır
 
-Kullanıcı tercihleri ve profil bilgileri cihazda saklanır
-Uygulama kapatılsa bile veriler kaybolmaz
+---
 
-🎨 Tasarım & Deneyim
+# ✨ Öne Çıkan Özellikler
 
-Premium dark theme
-Tutarlı renk paleti
-Smooth animasyonlar
+## 🚀 Animasyonlu Onboarding
+* Modern karşılama ekranı
+* Sadece ilk açılışta gösterim
+* Akıcı geçiş animasyonları
 
+## 🧮 Harcama Hesaplama
+* Fiyatları eğlenceli birimlere dönüştürme
+* Hızlı ve anlaşılır hesaplama deneyimi
+* Günlük harcamaları daha somut hale getirme
 
-🧠 Teknik Detaylar
+## 🔄 Abonelik Yönetimi
+* Abonelik ekleme / düzenleme / silme
+* Aylık toplam harcama hesaplama
+* Harcamaların aktif birimlere göre karşılıklarını gösterme
 
-Flutter ile geliştirildi
-State yönetimi için Provider
-Yerel veri saklama için SharedPreferences
-Material Design prensiplerine uygun modern UI
-MVP mantığıyla ölçeklenebilir yapı
+## ⚙️ Özel Birim Sistemi
+* Varsayılan birimler
+* Kullanıcı tarafından özel birim oluşturma
+* Birim fiyatlarını düzenleme
+* Birimleri aktif / pasif yapabilme
 
+## 👤 Profil Özelleştirme
+* Kullanıcı adı değiştirme
+* Avatar seçimi
+* Kalıcı profil bilgileri
 
-📬 İletişim
+## 💾 Kalıcı Yerel Veri
+* Kullanıcı tercihlerini cihazda saklama
+* Uygulama yeniden açılsa bile verilerin korunması
+
+## 🎨 Modern UI/UX
+* Premium dark theme
+* Tutarlı renk paleti
+* Smooth animasyonlar
+* Modern kart tabanlı tasarım
+* Mobil odaklı kullanıcı deneyimi
+
+---
+
+# 📸 Ekran Görüntüleri
+
+> Uygulamaya ait ekran görüntüleri ve mağaza görselleri repository içerisinde ve Google Play Store sayfasında bulunmaktadır.
+
+---
+
+# 🧠 Teknik Detaylar
+* Flutter
+* Dart
+* Provider (State Management)
+* SharedPreferences (Local Storage)
+* Material Design 3
+* MVP odaklı ölçeklenebilir yapı
+
+---
+
+# 🏗 Proje Amacı
+Dönermatik klasik bir banka veya finans uygulaması olmayı hedeflemez.
+Bunun yerine:
+
+* Finansal farkındalık,
+* Eğlenceli harcama takibi,
+* Kullanıcı deneyimi,
+* Harcama psikolojisi,
+* Modern mobil ürün yaklaşımı
+
+üzerine odaklanır.
+Gelecekte planlanan özellikler:
+
+* Harcama analizleri
+* Rozet ve başarı sistemi
+* İstatistik ekranları
+* Yapay zekâ destekli öneriler
+* Profil kişiselleştirmeleri
+* Gamification sistemleri
+
+---
+
+# 📬 İletişim
 Geri bildirim, öneri veya hata bildirimi için:
-📧 orcadev2025@gmail.com
 
-⚠️ Lisans ve Kullanım
-Bu proje, eğitim ve kişisel kullanım için açık kaynaklıdır.
+📧 [orcadev2025@gmail.com](mailto:orcadev2025@gmail.com)
 
-Ticari amaçlı yeniden dağıtım, uygulama konseptinin uygulama mağazalarında yayınlanmak üzere kopyalanması,
-veya küçük değişikliklerle yeniden yüklenmesi izinsiz olarak yasaktır.
+---
 
-© 2025 Tunahan Kara
+# ⚠️ Lisans ve Kullanım
+Bu proje eğitim ve kişisel kullanım amacıyla açık kaynaklıdır. Ticari amaçlı yeniden dağıtım, uygulama konseptinin mağazalarda yayınlanmak üzere kopyalanması veya küçük değişikliklerle yeniden yüklenmesi izinsiz olarak yasaktır.
+© 2026 Tunahan Kara / Orca Apps
 
+[ENG] 
 
+# 🥙 Dönermatik
 
-[ENG]
+> “How many döner did this actually cost?” 🌯
+Dönermatik is a modern mobile application that transforms daily expenses into fun and relatable real-life units such as döner, coffee, tea, simit, and custom user-defined units.
 
-🥙 Dönermatik
-Dönermatik is a modern mobile application that helps users understand their expenses by converting them into meaningful and fun real-life units (such as food or daily items).
-Instead of asking
-“How much money did I spend?”
-it answers
-👉 “How many things did I actually spend?”
-The app is a fully functional MVP (Minimum Viable Product) built with Flutter, featuring onboarding, persistent user data, premium UI, and branding.
+Instead of simply asking:
 
-🎯 Why Dönermatik?
-Money is abstract.
-Dönermatik makes spending concrete and understandable by translating it into relatable units.
-It aims to:
-Increase spending awareness
-Make financial tracking enjoyable
-Demonstrate how a simple idea can turn into a real product
+> “How much money did I spend this month?” Dönermatik lets users think:
+> “I spent 47 döner this month.”
+The project was developed as a fully functional MVP (Minimum Viable Product) using Flutter and includes onboarding, persistent local storage, premium UI design, branding, and modern mobile UX principles.
 
-For Screenshots : [Screenshots](https://github.com/tunahan-kara/Donermatik/tree/main/screenshots)
+---
 
+# 🚀 Published on Google Play
+📲 Download Dönermatik:
+[Google Play Store](https://play.google.com/store/apps/details?id=com.orcadev.donermatik)
 
+---
 
-✨ Key Features
+# 🎯 Why Dönermatik?
 
-🚀 Animated onboarding (shown only once)
-🧮 Expense calculation using custom units
-🔄 Subscription management with monthly totals
-⚙️ Custom unit creation and management
-👤 Profile customization (name & avatar)
-💾 Persistent local storage
-🌙 Premium dark theme & smooth UI
-🏷 Custom app icon and branding (Orca)
+Money is abstract. Dönermatik makes spending more understandable and emotionally relatable by converting prices into everyday units people can instantly visualize.
 
-🧠 Technical Overview
-Built with Flutter
-State management via Provider
-Local persistence using SharedPreferences
-Clean MVP-oriented architecture
+The app aims to:
+* Increase spending awareness
+* Make financial tracking fun
+* Turn a simple idea into a polished real-world product
+* Provide a modern and memorable mobile experience
 
+This project was built to demonstrate how small but creative ideas can evolve into real published applications.
+---
 
-📬 Contact
-For feedback or suggestions:
-📧 orcadev2025@gmail.com
+# ✨ Key Features
 
+## 🚀 Animated Onboarding
+* Modern welcome experience
+* Displayed only once
+* Smooth transition animations
 
-⚠️ License & Usage
-This project is open-source for educational and personal use.
+## 🧮 Expense Calculation
+* Convert prices into fun real-life units
+* Fast and intuitive calculations
+* Relatable spending visualization
 
-Commercial redistribution, cloning the app concept for publishing on app stores,
-or re-uploading with minor modifications is not permitted without permission.
+## 🔄 Subscription Tracking
+* Add / edit / remove subscriptions
+* Monthly total calculation
+* Convert subscription costs into active units
 
-© 2025 Tunahan Kara
+## ⚙️ Custom Unit Management
+* Built-in default units
+* Create custom units
+* Edit unit prices
+* Enable / disable units dynamically
+
+## 👤 Profile Customization
+* Change username
+* Select avatar
+* Persistent profile data
+
+## 💾 Persistent Local Storage
+* User preferences saved locally
+* Data remains after app restarts
+
+## 🎨 Modern UI/UX
+* Premium dark theme
+* Consistent color palette
+* Smooth animations
+* Modern card-based interface
+* Mobile-first user experience
+
+---
+
+# 📸 Screenshots
+> Screenshots and promotional store assets are available in the repository and on the Google Play Store page.
+---
+
+# 🧠 Technical Overview
+* Flutter
+* Dart
+* Provider (State Management)
+* SharedPreferences (Local Storage)
+* Material Design 3
+* MVP-oriented scalable architecture
+
+---
+
+# 🏗 Project Goals
+Dönermatik is not intended to be a traditional banking application.
+Instead, it focuses on:
+* Financial awareness
+* Gamified expense tracking
+* Fun user interaction
+* Relatable spending psychology
+* Modern mobile product experience
+
+Future plans include:
+* Spending analytics
+* Achievement & badge systems
+* Statistics dashboard
+* AI-supported recommendations
+* Personalized profiles
+* Gamification systems
+
+---
+
+# 📬 Contact
+For feedback, suggestions, or bug reports:
+
+📧 [orcadev2025@gmail.com](mailto:orcadev2025@gmail.com)
+
+---
+
+# ⚠️ License & Usage
+
+This project is open-source for educational and personal use. Commercial redistribution, cloning the app concept for app store publishing, or re-uploading modified versions without permission is prohibited.
+© 2026 Tunahan Kara / Orca Apps
+
