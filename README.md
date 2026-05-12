@@ -1,5 +1,7 @@
 [TR]
 
+[![Google Play](https://img.shields.io/badge/Google_Play-Dönermatik-green?logo=google-play)](LINK)
+
 # 🥙 Dönermatik
 
 > “Bu aslında kaç döner ediyor?” 🌯
