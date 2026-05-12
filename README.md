@@ -20,6 +20,8 @@ Proje; Flutter ile geliştirilmiş tam fonksiyonel bir MVP (Minimum Viable Produ
 
 📲 Dönermatik’i indir: [Google Play Store](https://play.google.com/store/apps/details?id=com.orcadev.donermatik)
 
+[![Google Play](https://img.shields.io/badge/Google_Play-Dönermatik-green?logo=google-play)](https://play.google.com/store/apps/details?id=com.orcadev.donermatik)
+
 ---
 
 # 🎯 Neden Dönermatik?
@@ -143,6 +145,7 @@ The project was developed as a fully functional MVP (Minimum Viable Product) usi
 # 🚀 Published on Google Play
 📲 Download Dönermatik:
 [Google Play Store](https://play.google.com/store/apps/details?id=com.orcadev.donermatik)
+[![Google Play](https://img.shields.io/badge/Google_Play-Dönermatik-green?logo=google-play)](https://play.google.com/store/apps/details?id=com.orcadev.donermatik)
 
 ---
 
