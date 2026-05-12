@@ -2,6 +2,8 @@
 
 # 🥙 Dönermatik
 
+[![Google Play](https://img.shields.io/badge/Google_Play-Dönermatik-green?logo=google-play)](https://play.google.com/store/apps/details?id=com.orcadev.donermatik)
+
 > “Bu aslında kaç döner ediyor?” 🌯
 
 Dönermatik, günlük harcamaları döner, kahve, çay, simit ve kullanıcı tarafından oluşturulabilen özel birimler gibi eğlenceli ve günlük hayattan alınmış ölçülere dönüştüren modern bir mobil uygulamadır.
